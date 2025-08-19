@@ -1,0 +1,33 @@
+1st Draft :
+
+package main
+
+import (
+	"log"
+	"net/http"
+)
+
+type server struct {
+	addr string
+}
+
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) { // this is a http.Handler interface
+	w.Write([]byte("Hello from the server"))  // this is serving the write request.
+}
+
+func main() {
+	s := &server{addr: ":8080"} // Creating a new server instance that is listening to port :8080
+	if err := http.ListenAndServe(s.addr, s); err != nil {  // First argument: the address (:8080) , Second argument: the handler (s)
+		log.Fatal(err) // Error handling
+	}
+}
+ // Note :
+*ServeHTTP is a special method.
+Go says: if you write this method, your type (server) can handle web requests.
+w.Write([]byte("...")) → sends a message back to the web browser.
+
+*http.ListenAndServe(addr, handler)  -> 1st for address; 2nd for handler
+“If you want your type to be an HTTP handler, you must give it a method named ServeHTTP(w, r).”
+the reason Go is calling it automatically is because the HTTP package expects anything you pass as the second argument 
+to http.ListenAndServe to satisfy the http.Handler interface.
+Since your server type has this method, it “plugs in” seamlessly.
