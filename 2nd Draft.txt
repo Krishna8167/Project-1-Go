@@ -1,0 +1,49 @@
+package main
+
+import (
+	"log"
+	"net/http"
+)
+
+type server struct {
+	addr string
+}
+
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		switch r.URL.Path {
+		case "/":
+			w.Write([]byte("index page"))
+			return
+		case "/users":
+			w.Write([]byte("users page"))
+			return
+		}
+	default:
+		w.Write([]byte("404 page"))
+		return
+	}
+}
+
+func main() {
+	s := &server{addr: ":8080"}
+	if err := http.ListenAndServe(s.addr, s); err != nil {
+		log.Fatal(err)
+	}
+}
+
+//
+*r is of type *http.Request (predefined struct in Go’s net/http library).
+Inside http.Request, there is a field called URL.
+URL itself is of type *url.URL (also predefined in Go’s net/url package).
+That url.URL struct has a field called Path
+
+Here’s what happens every time a request comes in:
+Check the HTTP method
+r.Method gives the request method (GET, POST, etc.).
+You compare it with http.MethodGet (which is just the constant "GET").
+If it’s a GET request → look at the path (r.URL.Path):
+If the path is / → respond with "index page".
+If the path is /users → respond with "users page".
+If it’s not a GET → send back "404 page".
