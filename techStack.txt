@@ -1,0 +1,7 @@
+what tech are we using , pretty simple:
+
+- Go
+- Docker
+- Postgres running on Docker
+- Swagger for docs
+- Golang migrate for migrations
