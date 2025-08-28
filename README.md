@@ -1,1 +1,1 @@
-1st operation : Writing from the server
+1st operation : Writing generated from the server
